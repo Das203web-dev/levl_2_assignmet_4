@@ -1,69 +1,85 @@
-# React + TypeScript + Vite
+# Live Link
+https://roaring-twilight-d31f97.netlify.app/
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Project Setup
+1. Clone the repository.
+2. Install dependencies using `npm install`.
+3. Make sure the backend server is running (see backend repo).
+4. Run the development server using `npm run dev`.
+5. Open the app at `http://localhost:5173`.
 
-Currently, two official plugins are available:
+# Features
+- View all books with details.
+- Add new books.
+- Edit or delete existing books.
+- Borrow books with quantity and due date.
+- View summary of borrowed books.
+- Filter and sort books by genre.
+- Responsive design for various screen sizes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Tech Stack
+- React (Vite)
+- TypeScript
+- Redux Toolkit & RTK Query
+- Tailwind CSS
+- ShadCN UI
+- React Icons
 
-## Expanding the ESLint configuration
+# Backend API Details
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Books API
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### POST `/api/books`
+Create a new book.  
+- Request body: Book data (JSON)  
+- Response: The created book data with success message
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### GET `/api/books`
+Get a list of books.  
+- Query parameters (optional):  
+  - `filter`: Filter by genre  
+  - `sortBy`: Field to sort by  
+  - `sort`: Sort order (`asc` or `desc`)  
+  - `limit`: Number of books to return (default 10)  
+- Response: List of books with success message
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### GET `/api/books/:bookId`
+Get details of a single book by its ID.  
+- Path parameter: `bookId` (ID of the book)  
+- Response: Book data if found; 404 if not found
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### PUT `/api/books/:bookId`
+Update an existing book by ID.  
+- Path parameter: `bookId`  
+- Request body: Fields to update  
+- Response: Updated book data with success message
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### DELETE `/api/books/:bookId`
+Delete a book by ID.  
+- Path parameter: `bookId`  
+- Response: Success message on deletion
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Borrow API
+
+### POST `/api/borrow`
+Borrow a book by providing book ID, quantity, and due date.  
+- Request body:  
+  - `book`: ID of the book to borrow  
+  - `quantity`: Number of copies to borrow  
+  - `dueDate`: Return due date  
+- Response: The borrowed book record with success message
+
+### GET `/api/borrow`
+Get a summary of borrowed books grouped by book, including total quantity borrowed for each.  
+- Response: List of books with their title, ISBN, and total borrowed quantity
+
+# Useful Links
+- Backend Repo: https://github.com/Das203web-dev/level-2-assignment-3  
+- Backend Live API: https://level-2-assignment-3-6lyx.onrender.com/  
+- Frontend Live Demo: https://roaring-twilight-d31f97.netlify.app/
+
+# Contributing
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+# License
+This project is licensed under the MIT License.
