@@ -182,22 +182,18 @@ const EditBook = ({ book }: IBookWithId) => {
                         <FormField
                             control={form.control}
                             name="isbn"
-                            rules={{
-                                required: "Must provide the ISBN"
-                            }}
+                            rules={{ required: "ISBN number is required" }}
                             render={({ field, fieldState }) => (
                                 <FormItem>
                                     <FormLabel>ISBN</FormLabel>
                                     <FormControl>
-                                        <Input {...form.register("isbn", { required: "Must provide the ISBN" })} />
+                                        <Input {...field} value={field.value || ""} />
                                     </FormControl>
-                                    {
-                                        fieldState.error && (
-                                            <p className="text-red-500 text-sm">
-                                                {fieldState.error.message}
-                                            </p>
-                                        )
-                                    }
+                                    {fieldState.error && (
+                                        <p className="text-red-500 text-sm">
+                                            {fieldState.error.message}
+                                        </p>
+                                    )}
                                 </FormItem>
                             )}
                         />
