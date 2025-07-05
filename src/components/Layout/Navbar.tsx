@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { MdOutlineLocalLibrary } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RiMenu3Line } from "react-icons/ri";
 import { IoCloseOutline } from "react-icons/io5";
 
@@ -12,11 +12,40 @@ const Navbar = () => {
         { id: 2, name: "add book", paths: "create-book" },
         { id: 3, name: "borrow summary", paths: "borrow-summary" },
     ];
+    useEffect(() => {
+        const lockScroll = () => {
+            document.body.style.overflow = "hidden";
+        };
+
+        const unlockScroll = () => {
+            document.body.style.overflow = "auto";
+        };
+
+        const handleResize = () => {
+            if (open && window.innerWidth < 768) {
+                lockScroll();
+            } else {
+                unlockScroll();
+            }
+        };
+
+        if (open) {
+            handleResize();
+            window.addEventListener("resize", handleResize);
+        } else {
+            unlockScroll();
+        }
+
+        return () => {
+            unlockScroll();
+            window.removeEventListener("resize", handleResize);
+        };
+    }, [open]);
 
     return (
         <nav className="flex max-w-7xl mx-auto overflow-hidden py-5 justify-between items-center">
             <Link className="text-4xl bg-black text-white p-2 rounded-full ml-5 xl:ml-0 z-50" to={'/'}><MdOutlineLocalLibrary></MdOutlineLocalLibrary></Link>
-            <ul className={`flex md:static mr-5 xl:mr-0 justify-center items-center flex-col md:flex-row md:w-fit w-full h-screen md:h-fit transition-all duration-500 bg-white z-10 gap-5 uppercase absolute ${open ? " top-0 md:flex-row" : "-top-full"}`}>
+            <ul className={`flex md:static mr-5 xl:mr-0 justify-center items-center flex-col md:flex-row md:w-fit font-semibold w-full h-screen md:h-fit transition-all duration-500 bg-white z-10 gap-5 uppercase absolute ${open ? "top-0 md:flex-row" : "-top-full"}`}>
                 {
                     navLinks.map(link => <Link onClick={() => setOpen(false)} key={link.id} to={link.paths}>{link.name}</Link>)
                 }
