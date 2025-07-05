@@ -41,13 +41,6 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-input.prevent-selection::selection {
-  background: transparent;
-}
-
-input.no-select {
-  user-select: none;
-}
 
 
 

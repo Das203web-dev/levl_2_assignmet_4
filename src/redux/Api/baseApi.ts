@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const baseApi = createApi({
     reducerPath: "baseApi",
-    baseQuery: fetchBaseQuery({ baseUrl: "https://level-2-assignment-3-6lyx.onrender.com/" }),
+    baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/" }),
+    // baseQuery: fetchBaseQuery({ baseUrl: "https://level-2-assignment-3-6lyx.onrender.com/" }),
     tagTypes: ["books", "borrowBooks"],
     endpoints: (builder) => ({
         getBooks: builder.query({
