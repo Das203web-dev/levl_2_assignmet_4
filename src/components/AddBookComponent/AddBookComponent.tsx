@@ -3,117 +3,127 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import type { IBooks } from "@/type/type";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "../ui/select";
 import { useCreateBookMutation } from "@/redux/Api/baseApi";
 import { swalFire } from "@/sweetAlert/sweetAlert";
 import { useNavigate } from "react-router";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
-
-
 const AddBookComponent = () => {
     const form = useForm<IBooks>();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [createBook, { isLoading }] = useCreateBookMutation();
-    if (isLoading) {
-        return <LoadingComponent></LoadingComponent>
-    }
 
     const { setError } = form;
 
+    if (isLoading) {
+        return <LoadingComponent />;
+    }
 
     const handleFormSubmit: SubmitHandler<IBooks> = async (data) => {
         try {
             const bookData: IBooks = {
                 ...data,
                 available: true,
-                copies: Number(data.copies)
-            }
-            const result = await createBook(bookData).unwrap()
+                copies: Number(data.copies),
+            };
+
+            const result = await createBook(bookData).unwrap();
             if (result.success) {
-                swalFire({ title: result?.data?.title, text: result.message, icon: "success" })
-                navigate("/books")
+                swalFire({
+                    title: result?.data?.title,
+                    text: result.message,
+                    icon: "success",
+                });
+                navigate("/books");
             }
         } catch (error: any) {
             if (error?.data?.error?.errors?.title) {
                 setError("title", {
                     type: "server",
-                    message: error?.data?.error?.errors?.title.message
-                })
-            }
-            else if (error?.data?.error?.errors?.author) {
+                    message: error?.data?.error?.errors?.title.message,
+                });
+            } else if (error?.data?.error?.errors?.author) {
                 setError("author", {
                     type: "server",
-                    message: error?.data?.error?.errors?.author.message
-                })
-            }
-            else if (error?.data?.error?.errors?.genre) {
+                    message: error?.data?.error?.errors?.author.message,
+                });
+            } else if (error?.data?.error?.errors?.genre) {
                 setError("genre", {
                     type: "server",
-                    message: error?.data?.error?.errors?.genre.message
-                })
-            }
-            else if (error.data.error.code === 11000) {
+                    message: error?.data?.error?.errors?.genre.message,
+                });
+            } else if (error?.data?.error?.code === 11000) {
                 setError("isbn", {
                     type: "server",
-                    message: error?.data?.message
-                })
-            }
-            else if (error?.data?.error?.errors?.copies) {
+                    message: error?.data?.message,
+                });
+            } else if (error?.data?.error?.errors?.copies) {
                 setError("copies", {
                     type: "server",
-                    message: error?.data?.error?.errors?.copies.message
-                })
+                    message: error?.data?.error?.errors?.copies.message,
+                });
             }
-
         }
-    }
+    };
+
     return (
         <div className="md:w-[425px] w-full p-5 shadow shadow-black/20 md:p-10 rounded-md bg-white mx-auto">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleFormSubmit)} className="flex flex-col gap-5">
+                <form
+                    onSubmit={form.handleSubmit(handleFormSubmit)}
+                    className="flex flex-col gap-5"
+                >
                     <FormField
                         control={form.control}
                         name="title"
+                        rules={{ required: "Book title is required" }}
                         render={({ field, fieldState }) => (
                             <FormItem>
                                 <FormLabel>Title</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value || ""}></Input>
+                                    <Input {...field} value={field.value || ""} />
                                 </FormControl>
                                 {fieldState.error && (
                                     <p className="text-red-500 text-sm">
                                         {fieldState.error.message}
                                     </p>
                                 )}
-
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="author"
-
+                        rules={{ required: "Author name is required" }}
                         render={({ field, fieldState }) => (
                             <FormItem>
                                 <FormLabel>Author</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value || ""}></Input>
+                                    <Input {...field} value={field.value || ""} />
                                 </FormControl>
-                                {
-                                    fieldState.error && (
-                                        <p className="text-red-500 text-sm">
-                                            {fieldState.error.message}
-                                        </p>
-                                    )}
-
+                                {fieldState.error && (
+                                    <p className="text-red-500 text-sm">
+                                        {fieldState.error.message}
+                                    </p>
+                                )}
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="genre"
-
+                        rules={{ required: "Please select a genre" }}
                         render={({ field, fieldState }) => (
                             <FormItem>
                                 <FormLabel>Genre</FormLabel>
@@ -135,80 +145,87 @@ const AddBookComponent = () => {
                                         </SelectContent>
                                     </Select>
                                 </FormControl>
-                                {
-                                    fieldState.error && (
-                                        <p className="text-red-500 text-sm">{fieldState.error.message}</p>
-                                    )
-                                }
+                                {fieldState.error && (
+                                    <p className="text-red-500 text-sm">
+                                        {fieldState.error.message}
+                                    </p>
+                                )}
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="isbn"
-                        rules={{
-                            required: "ISBN is required"
-                        }}
+                        rules={{ required: "ISBN number is required" }}
                         render={({ field, fieldState }) => (
                             <FormItem>
                                 <FormLabel>ISBN</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value || ""}></Input>
+                                    <Input {...field} value={field.value || ""} />
                                 </FormControl>
-                                {
-                                    fieldState.error && (
-                                        <p className="text-red-500 text-sm">{fieldState.error.message}</p>
-                                    )
-                                }
+                                {fieldState.error && (
+                                    <p className="text-red-500 text-sm">
+                                        {fieldState.error.message}
+                                    </p>
+                                )}
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="description"
-                        render={({ field }) => (
+                        rules={{ required: "Book description is required" }}
+                        render={({ field, fieldState }) => (
                             <FormItem>
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value || ""}></Input>
+                                    <Input {...field} value={field.value || ""} />
                                 </FormControl>
-
+                                {fieldState.error && (
+                                    <p className="text-red-500 text-sm">
+                                        {fieldState.error.message}
+                                    </p>
+                                )}
                             </FormItem>
                         )}
                     />
+
                     <FormField
                         control={form.control}
                         name="copies"
                         rules={{
-                            required: "Must provide number of copies",
+                            required: "Please provide the number of copies",
                             min: {
                                 value: 1,
-                                message: "Copies must be at least 1 (no negative or zero allowed)"
-                            }
+                                message: "At least 1 copy must be available",
+                            },
                         }}
                         render={({ field, fieldState }) => (
                             <FormItem>
                                 <FormLabel>Copies</FormLabel>
                                 <FormControl>
-                                    <Input {...field} value={field.value || ""}></Input>
+                                    <Input {...field} value={field.value || ""} />
                                 </FormControl>
-                                {
-                                    fieldState.error && (
-                                        <p className="text-red-500 text-sm">{fieldState.error.message}</p>
-                                    )
-                                }
+                                {fieldState.error && (
+                                    <p className="text-red-500 text-sm">
+                                        {fieldState.error.message}
+                                    </p>
+                                )}
                             </FormItem>
                         )}
                     />
 
                     <div className="flex justify-between items-center">
-                        <Button variant="outline">Cancel</Button>
+                        <Button variant="outline" type="button">
+                            Cancel
+                        </Button>
                         <Button type="submit">Add Book</Button>
                     </div>
                 </form>
             </Form>
-
-        </div >
+        </div>
     );
 };
 

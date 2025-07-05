@@ -8,6 +8,9 @@ export interface IBooks {
     description?: string
     copies: number
     available?: boolean | true,
+
+}
+export interface IBooksOutPut extends IBooks {
     createdAt?: string,
     updatedAt?: string
 }
