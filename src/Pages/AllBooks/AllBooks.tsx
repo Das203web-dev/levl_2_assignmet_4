@@ -1,4 +1,4 @@
-import { useDeleteBookMutation, useGetBooksQuery } from "@/redux/Api/baseApi";
+import { useGetBooksQuery } from "@/redux/Api/baseApi";
 import {
     Table,
     TableBody,
@@ -7,7 +7,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import type { IBooks, IIdForBook } from "@/type/type";
+import type { IIdForBook } from "@/type/type";
 import EditBook from "@/components/AllBooksComponents/EditBook";
 import { DeleteBook } from "@/components/AllBooksComponents/DeleteBook";
 import { BorrowBook } from "@/components/AllBooksComponents/BorrowBook";
@@ -22,15 +22,11 @@ import LoadingComponent from "@/components/LoadingComponent/LoadingComponent";
 
 const AllBooks = () => {
     const { data, isLoading, isError } = useGetBooksQuery(undefined);
-    // console.log(data);
     if (isLoading) {
         return <LoadingComponent></LoadingComponent>
     }
-    if (!data) {
-        return <h1>No books found</h1>
-    }
     if (isError) {
-        throw new Error("Something went")
+        throw new Error("Something went wrong")
     }
 
     return (
@@ -48,9 +44,9 @@ const AllBooks = () => {
                     </p>
                 </div>
             </section>
-            <section className="max-w-7xl space-y-5 mx-auto">
+            <section className="max-w-7xl p-5 overflow-hidden space-y-5 mx-auto">
                 <div className="flex justify-between items-center">
-                    <h1 className="bg-white text-2xl">All books {data.data.length}</h1>
+                    <h1 className="text-2xl">All books</h1>
                     <Link to={'/create-book'}><Button className="bg-black cursor-pointer text-white">Add Book</Button></Link>
                 </div>
                 <Table className="border-[0.5px] border-black/10">
@@ -67,14 +63,14 @@ const AllBooks = () => {
                     </TableHeader>
                     <TableBody>
                         {
-                            data.data.map((book: IIdForBook) => <TableRow key={book._id}>
+                            data?.data.map((book: IIdForBook) => <TableRow key={book._id}>
                                 <TableCell className="font-medium border-r-[0.5px]">{book.title}</TableCell>
                                 <TableCell className="text-center border-r-[0.5px]">{book.author}</TableCell>
                                 <TableCell className="text-center border-r-[0.5px]">{book.genre}</TableCell>
                                 <TableCell className="text-center border-r-[0.5px]">{book.isbn}</TableCell>
                                 <TableCell className="text-center border-r-[0.5px]">{book.copies}</TableCell>
-                                <TableCell className="text-center border-r-[0.5px]">{book.copies > 0 ? "Available" : "Not Available"}</TableCell>
-                                <TableCell className="flex justify-center gap-5 text-md">
+                                <TableCell className="text-center border-r-[0.5px]">{book.copies ? "Available" : "Not Available"}</TableCell>
+                                <TableCell className="flex justify-center gap-2 xl:gap-5 text-md">
 
                                     <Link to={`/books/${book._id}`}><Button variant="outline"><FaRegEye></FaRegEye></Button></Link>
 

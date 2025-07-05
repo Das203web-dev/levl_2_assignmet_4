@@ -6,19 +6,20 @@ import type { IBooks } from "@/type/type";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 import { useCreateBookMutation } from "@/redux/Api/baseApi";
 import { swalFire } from "@/sweetAlert/sweetAlert";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
 
 
 const AddBookComponent = () => {
     const form = useForm<IBooks>();
-    // const location = useLocation()
     const navigate = useNavigate()
-    const [createBook, { isLoading, isError }] = useCreateBookMutation();
+    const [createBook, { isLoading }] = useCreateBookMutation();
+    if (isLoading) {
+        return <LoadingComponent></LoadingComponent>
+    }
 
-    // console.log(form.formState.errors);
-    const { control, handleSubmit, formState: { errors, isSubmitting }, setError } = form;
+    const { setError } = form;
 
 
     const handleFormSubmit: SubmitHandler<IBooks> = async (data) => {
@@ -29,13 +30,11 @@ const AddBookComponent = () => {
                 copies: Number(data.copies)
             }
             const result = await createBook(bookData).unwrap()
-            // console.log(result);
             if (result.success) {
                 swalFire({ title: result?.data?.title, text: result.message, icon: "success" })
                 navigate("/books")
             }
         } catch (error: any) {
-            console.log(error);
             if (error?.data?.error?.errors?.title) {
                 setError("title", {
                     type: "server",
@@ -69,7 +68,6 @@ const AddBookComponent = () => {
 
         }
     }
-    // console.log(book);
     return (
         <div className="md:w-[425px] w-full p-5 shadow shadow-black/20 md:p-10 rounded-md bg-white mx-auto">
             <Form {...form}>
@@ -181,7 +179,13 @@ const AddBookComponent = () => {
                     <FormField
                         control={form.control}
                         name="copies"
-
+                        rules={{
+                            required: "Must provide number of copies",
+                            min: {
+                                value: 1,
+                                message: "Copies must be at least 1 (no negative or zero allowed)"
+                            }
+                        }}
                         render={({ field, fieldState }) => (
                             <FormItem>
                                 <FormLabel>Copies</FormLabel>
@@ -199,7 +203,7 @@ const AddBookComponent = () => {
 
                     <div className="flex justify-between items-center">
                         <Button variant="outline">Cancel</Button>
-                        <Button className="uppercase" type="submit">Add Book</Button>
+                        <Button type="submit">Add Book</Button>
                     </div>
                 </form>
             </Form>

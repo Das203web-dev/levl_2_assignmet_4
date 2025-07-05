@@ -2,15 +2,14 @@ import { useGetSingleBookQuery } from "@/redux/Api/baseApi";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useParams } from "react-router";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
-import bookBg from "../../assets/singleBook.jpg"
+import bookBg from "../../assets/singleBook.jpg";
 
 const BookDetails = () => {
     const { id } = useParams();
     const { data, isLoading, isError } = useGetSingleBookQuery(id ?? "");
 
-    if (isLoading) {
-        return <LoadingComponent />;
-    }
+    if (isLoading) return <LoadingComponent />;
+
     if (isError) {
         return (
             <div className="flex justify-center items-center h-screen bg-red-50">
@@ -21,55 +20,50 @@ const BookDetails = () => {
         );
     }
 
+    const book = data?.data;
+
     return (
-        <div style={{ backgroundImage: `url(${bookBg})` }} className="h-full bg-center bg-cover bg-no-repeat py-12 px-4">
-            <div className="max-w-3xl mx-auto bg-blue-900/5 backdrop-blur-md rounded border border-gray-300">
-                <div className="p-8 sm:p-12 text-white">
-                    {/* Title */}
-                    <h1 className="text-4xl font-light text-white mb-3">
-                        {data.data.title}
-                    </h1>
+        <div
+            style={{ backgroundImage: `url(${bookBg})` }}
+            className="min-h-screen bg-center bg-cover bg-no-repeat flex items-center justify-center p-4"
+        >
+            <div className="max-w-3xl w-full bg-black/50 backdrop-blur-md text-white rounded-2xl shadow-2xl border border-white/10">
+                <div className="p-8 sm:p-12 space-y-6">
+                    <div className="text-center">
+                        <h1 className="text-4xl font-semibold mb-2 tracking-wide">{book.title}</h1>
+                        <p className="italic text-lg opacity-80">by {book.author}</p>
+                    </div>
 
-                    {/* Author */}
-                    <p className="text-base italic mb-8 tracking-wide">
-                        by {data.data.author}
+                    <p className="text-sm sm:text-base leading-relaxed text-justify border-t border-b border-white/10 py-4">
+                        {book.description}
                     </p>
 
-                    {/* Description */}
-                    <p className=" leading-relaxed mb-8 text-justify">
-                        {data.data.description}
-                    </p>
-
-                    {/* Details grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 font-light">
-                        <h3 className="uppercase flex items-center tracking-widest text-sm mb-1">
-                            Genre : <span className="text-lg ml-1">{data.data.genre}</span>
-                        </h3>
-
-                        <h3 className="uppercase flex items-center tracking-widest text-sm mb-1">
-                            ISBN : <span className="text-lg ml-1">{data.data.isbn}</span>
-                        </h3>
-
-                        <h3 className="uppercase tracking-widest text-sm mb-1">
-                            Copies : <span className="text-lg ml-1">{data.data.copies}</span>
-                        </h3>
-
-                        <div className="flex items-center space-x-3">
-                            <h3 className="uppercase tracking-widest text-sm">
-                                Available
-                            </h3>
-                            {data.data.available ? (
-                                <FaCheckCircle className="text-green-600 w-6 h-6" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm sm:text-base">
+                        <div>
+                            <span className="block font-semibold opacity-70 uppercase">Genre</span>
+                            <p className="text-white">{book.genre}</p>
+                        </div>
+                        <div>
+                            <span className="block font-semibold opacity-70 uppercase">ISBN</span>
+                            <p className="text-white">{book.isbn}</p>
+                        </div>
+                        <div>
+                            <span className="block font-semibold opacity-70 uppercase">Copies</span>
+                            <p className="text-white">{book.copies}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="block font-semibold opacity-70 uppercase">Available</span>
+                            {book.available ? (
+                                <FaCheckCircle className="text-green-500 w-5 h-5" />
                             ) : (
-                                <FaTimesCircle className="text-red-600 w-6 h-6" />
+                                <FaTimesCircle className="text-red-500 w-5 h-5" />
                             )}
                         </div>
                     </div>
 
-                    {/* Dates */}
-                    <div className="mt-10 flex justify-between text-sm border-t border-gray-200 pt-6">
-                        <p>Created: {new Date(data.data.createdAt).toLocaleDateString()}</p>
-                        <p>Updated: {new Date(data.data.updatedAt).toLocaleDateString()}</p>
+                    <div className="text-sm text-gray-300 flex justify-between border-t border-white/10 pt-4">
+                        <span>Created: {new Date(book.createdAt).toLocaleDateString()}</span>
+                        <span>Updated: {new Date(book.updatedAt).toLocaleDateString()}</span>
                     </div>
                 </div>
             </div>

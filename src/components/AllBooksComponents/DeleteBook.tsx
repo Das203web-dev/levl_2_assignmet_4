@@ -11,10 +11,21 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { useDeleteBookMutation } from "@/redux/Api/baseApi"
+import { swalFire } from "@/sweetAlert/sweetAlert"
 import { MdDeleteForever } from "react-icons/md"
 
-export function DeleteBook({ id }) {
+interface IDeleteBookId {
+    id: string
+}
+
+export function DeleteBook({ id }: IDeleteBookId) {
     const [deleteBook] = useDeleteBookMutation()
+    const handleDelete = async (bookId: string) => {
+        const deleteBookResult = await deleteBook(bookId).unwrap();
+        if (deleteBookResult.success) {
+            swalFire({ title: "", text: deleteBookResult.message, icon: "success" })
+        }
+    }
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -29,7 +40,7 @@ export function DeleteBook({ id }) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => deleteBook(id)}>Delete</AlertDialogAction>
+                    <AlertDialogAction onClick={() => handleDelete(id)}>Delete</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

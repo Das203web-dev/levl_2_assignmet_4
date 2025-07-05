@@ -1,6 +1,6 @@
 import type { ISwalAlertType } from '@/type/type'
 import Swal from 'sweetalert2'
-export const swalFire = ({ title, text, icon }: ISwalAlertType) => {
+export const swalFire = ({ title = "", text, icon }: ISwalAlertType) => {
     return Swal.fire({
         position: "top-end",
         showConfirmButton: false,

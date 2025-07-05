@@ -31,11 +31,10 @@ interface BorrowBookType {
 export function BorrowBook({ book }: BorrowBookType) {
     const [open, setOpen] = useState(false)
     const navigate = useNavigate()
-    // console.log(book);
     const form = useForm();
     const [borrowBook] = useBorrowBookMutation()
     const [openCalendar, setOpenCalender] = useState(false)
-    const { setError, formState: { errors } } = form;
+    const { setError } = form;
 
     const handleBorrowBook: SubmitHandler<FieldValues> = async (data) => {
         try {
@@ -46,22 +45,18 @@ export function BorrowBook({ book }: BorrowBookType) {
                 })
                 return
             }
-            // console.log(data);
             const borrowBookInfo: IBorrow = {
                 book: book._id,
                 quantity: data.copies,
                 dueDate: data.dueDate
             };
             const result = await borrowBook(borrowBookInfo as IBorrow).unwrap()
-            console.log(result);
             if (result.success) {
-                console.log("consoling inside result");
                 setOpen(false)
                 swalFire({ title: book.title, text: result.message, icon: "success" })
-                navigate("/borrowSummary")
+                navigate("/borrow-summary")
             }
         } catch (error: any) {
-            console.log(error);
             if (error.status === 500) {
                 setError("copies", {
                     type: "server",
@@ -82,7 +77,7 @@ export function BorrowBook({ book }: BorrowBookType) {
                     <DialogTitle>Borrow Book</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(handleBorrowBook)}>
+                    <form className="flex flex-col gap-2 md:gap-5" onSubmit={form.handleSubmit(handleBorrowBook)}>
                         <FormItem>
                             <FormLabel>Book Title</FormLabel>
                             <FormControl>
@@ -101,7 +96,11 @@ export function BorrowBook({ book }: BorrowBookType) {
                             control={form.control}
                             name="copies"
                             rules={{
-                                required: "Must provide number of copies"
+                                required: "Must provide number of copies",
+                                min: {
+                                    value: 1,
+                                    message: "Copies must be at least 1 (no negative or zero allowed)"
+                                }
                             }}
                             render={({ field, fieldState }) => (
                                 <FormItem>

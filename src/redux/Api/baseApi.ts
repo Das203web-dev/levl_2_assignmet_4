@@ -1,22 +1,19 @@
-// import type { IBooks } from '@/type/type'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-// import { url } from 'inspector'
-
 export const baseApi = createApi({
     reducerPath: "baseApi",
-    baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api" }),
+    baseQuery: fetchBaseQuery({ baseUrl: "https://level-2-assignment-3-6lyx.onrender.com/" }),
     tagTypes: ["books", "borrowBooks"],
     endpoints: (builder) => ({
         getBooks: builder.query({
-            query: () => "/books",
+            query: () => "api/books",
             providesTags: ["books"]
         }),
         getSingleBook: builder.query({
-            query: (id: string) => `/books/${id}`
+            query: (id: string) => `api/books/${id}`
         }),
         createBook: builder.mutation({
             query: (bookData) => ({
-                url: "/books",
+                url: "api/books",
                 method: "POST",
                 body: bookData
             }),
@@ -24,26 +21,26 @@ export const baseApi = createApi({
         }),
         deleteBook: builder.mutation({
             query: (id: string) => ({
-                url: `/books/${id}`,
+                url: `api/books/${id}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["books", "borrowBooks"]
         }),
         editBook: builder.mutation({
             query: (book) => ({
-                url: `/books/${book.id}`,
+                url: `api/books/${book.id}`,
                 method: "PUT",
                 body: book
             }),
             invalidatesTags: ["books"]
         }),
         borrowSummary: builder.query({
-            query: () => "/borrow",
+            query: () => "api/borrow",
             providesTags: ["borrowBooks"]
         }),
         borrowBook: builder.mutation({
             query: (book) => ({
-                url: `/borrow`,
+                url: `api/borrow`,
                 method: "POST",
                 body: book
             }),
@@ -53,4 +50,3 @@ export const baseApi = createApi({
 })
 export const { useGetBooksQuery, useGetSingleBookQuery, useCreateBookMutation, useDeleteBookMutation, useEditBookMutation, useBorrowBookMutation, useBorrowSummaryQuery } = baseApi
 
-// useEditBookMutation

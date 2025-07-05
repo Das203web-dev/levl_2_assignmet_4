@@ -20,6 +20,13 @@ export interface IBorrow {
     quantity: number,
     dueDate: Date
 }
+export interface IBorrowBookOutput {
+    totalQuantity: number,
+    book: {
+        isbn: string,
+        title: string
+    }
+}
 export interface ISwalAlertType {
     title: string,
     text: string,

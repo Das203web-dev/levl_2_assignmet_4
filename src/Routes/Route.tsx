@@ -4,6 +4,7 @@ import AllBooks from "../Pages/AllBooks/AllBooks";
 import AddBook from "../Pages/AddBook/AddBook";
 import BorrowSummary from "../Pages/BorrowSummary/BorrowSummary";
 import BookDetails from "@/components/AllBooksComponents/BookDetails";
+import Home from "@/Pages/Home/Home";
 
 const routes = createBrowserRouter([
     {
@@ -12,7 +13,7 @@ const routes = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <AllBooks></AllBooks>
+                element: <Home></Home>
             },
             {
                 path: "books",
@@ -27,7 +28,7 @@ const routes = createBrowserRouter([
                 element: <AddBook></AddBook>
             },
             {
-                path: "borrowSummary",
+                path: "borrow-summary",
                 element: <BorrowSummary></BorrowSummary>
             }
         ]

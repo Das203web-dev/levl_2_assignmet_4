@@ -7,7 +7,6 @@ import { MdOutlineCreate } from "react-icons/md";
 import type { IBooks, IIdForBook } from "@/type/type";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 import { useEditBookMutation } from "@/redux/Api/baseApi";
-import { useNavigate } from "react-router";
 import { swalFire } from "@/sweetAlert/sweetAlert";
 import { useEffect, useState } from "react";
 
@@ -21,7 +20,6 @@ interface EditBookType extends Partial<IBooks> {
 }
 
 const EditBook = ({ book }: IBookWithId) => {
-    // console.log(book);
     const [updateBook] = useEditBookMutation()
     const [updateFormOpen, setUpdateFormOpen] = useState(false)
     const form = useForm({
@@ -48,7 +46,7 @@ const EditBook = ({ book }: IBookWithId) => {
             })
         }
     }, [updateFormOpen, book, form])
-    const { formState: { errors }, setError } = form;
+    const { setError } = form;
     const handleEditBookFormSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
             const bookData = {
@@ -56,17 +54,13 @@ const EditBook = ({ book }: IBookWithId) => {
                 id: book._id,
                 copies: Number(data.copies)
             }
-            console.log(bookData);
             const result = await updateBook(bookData as EditBookType).unwrap()
-            console.log(result);
             if (result.success) {
                 await swalFire({ title: result?.data?.title, text: result.message, icon: "success" })
             }
             form.reset()
             setUpdateFormOpen(false)
-            // navigate("/books")
         } catch (error: any) {
-            console.log(error);
             if (error?.data?.error?.errors?.title) {
                 setError("title", {
                     type: "server",
@@ -100,7 +94,6 @@ const EditBook = ({ book }: IBookWithId) => {
 
         }
     }
-    // console.log(book);
     return (
         <Dialog open={updateFormOpen} onOpenChange={setUpdateFormOpen}>
 
@@ -109,10 +102,10 @@ const EditBook = ({ book }: IBookWithId) => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Edit Task</DialogTitle>
+                    <DialogTitle>Edit Book</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(handleEditBookFormSubmit)} className="flex flex-col gap-5">
+                    <form onSubmit={form.handleSubmit(handleEditBookFormSubmit)} className="flex flex-col gap-2 md:gap-5">
 
                         <FormField
                             control={form.control}
@@ -220,11 +213,19 @@ const EditBook = ({ book }: IBookWithId) => {
                         <FormField
                             control={form.control}
                             name="copies"
+                            rules={{
+                                required: "Must provide number of copies",
+                                min: {
+                                    value: 1,
+                                    message: "Copies must be at least 1 (no negative or zero allowed)"
+                                }
+                            }}
+
                             render={({ field, fieldState }) => (
                                 <FormItem>
                                     <FormLabel>Copies</FormLabel>
                                     <FormControl>
-                                        <Input {...field} value={field.value || ""}></Input>
+                                        <Input {...field} value={field.value}></Input>
                                     </FormControl>
                                     {
                                         fieldState.error && (
@@ -236,29 +237,7 @@ const EditBook = ({ book }: IBookWithId) => {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="available"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Available</FormLabel>
-                                    <FormControl>
-                                        <Select {...field} onValueChange={field.onChange}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Available</SelectLabel>
-                                                    <SelectItem value="true">Available</SelectItem>
-                                                    <SelectItem value="false">Not available</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
+
                         <DialogFooter>
                             <DialogClose asChild>
                                 <Button variant="outline">Cancel</Button>
