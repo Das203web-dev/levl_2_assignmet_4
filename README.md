@@ -9,69 +9,24 @@ https://roaring-twilight-d31f97.netlify.app/
 5. Open the app at `http://localhost:5173`.
 
 # Features
-- View all books with details.
-- Add new books.
-- Edit or delete existing books.
-- Borrow books with quantity and due date.
-- View summary of borrowed books.
-- Filter and sort books by genre.
-- Responsive design for various screen sizes.
+
+- **View All Books:** Browse a clean, sortable list of all books in the library.
+- **Add New Books:** Add new books by filling a form with title, author, genre, publication date, etc.
+- **Edit Book Details:** Update existing book information with an easy-to-use modal form.
+- **Delete Books:** Remove books from the collection with a confirmation dialog.
+- **Borrow Books:** Borrow books by specifying quantity and due date.
+- **Borrow Summary:** View a summary dashboard listing all borrowed books with total quantities and due dates.
+- **Search and Filter:** Filter books by genre to quickly find what you want.
+- **Responsive UI:** Fully responsive design optimized for desktop and mobile devices.
+- **Dark/Light Mode:** (If implemented) Toggle between light and dark themes for better accessibility.
 
 # Tech Stack
 - React (Vite)
 - TypeScript
 - Redux Toolkit & RTK Query
 - Tailwind CSS
-- ShadCN UI
+- ShadCN UI components
 - React Icons
-
-# Backend API Details
-
-## Books API
-
-### POST `/api/books`
-Create a new book.  
-- Request body: Book data (JSON)  
-- Response: The created book data with success message
-
-### GET `/api/books`
-Get a list of books.  
-- Query parameters (optional):  
-  - `filter`: Filter by genre  
-  - `sortBy`: Field to sort by  
-  - `sort`: Sort order (`asc` or `desc`)  
-  - `limit`: Number of books to return (default 10)  
-- Response: List of books with success message
-
-### GET `/api/books/:bookId`
-Get details of a single book by its ID.  
-- Path parameter: `bookId` (ID of the book)  
-- Response: Book data if found; 404 if not found
-
-### PUT `/api/books/:bookId`
-Update an existing book by ID.  
-- Path parameter: `bookId`  
-- Request body: Fields to update  
-- Response: Updated book data with success message
-
-### DELETE `/api/books/:bookId`
-Delete a book by ID.  
-- Path parameter: `bookId`  
-- Response: Success message on deletion
-
-## Borrow API
-
-### POST `/api/borrow`
-Borrow a book by providing book ID, quantity, and due date.  
-- Request body:  
-  - `book`: ID of the book to borrow  
-  - `quantity`: Number of copies to borrow  
-  - `dueDate`: Return due date  
-- Response: The borrowed book record with success message
-
-### GET `/api/borrow`
-Get a summary of borrowed books grouped by book, including total quantity borrowed for each.  
-- Response: List of books with their title, ISBN, and total borrowed quantity
 
 # Useful Links
 - Backend Repo: https://github.com/Das203web-dev/level-2-assignment-3  
